@@ -1,33 +1,36 @@
 import useAuth from "src/hooks/useAuth";
+import styles from "./styles.module.scss";
 
 function Login() {
+	const { login, loading } = useAuth();
 
-    const { login, loading } = useAuth();
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		const data = new FormData(e.currentTarget);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const data = new FormData(e.currentTarget);
+		login({
+			email: data.get("email"),
+			password: data.get("password"),
+		});
+	};
 
-        login({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
-    }
+	return (
+		<section className={styles.container}>
+			<form className={styles.form} onSubmit={handleSubmit}>
+				<div className={styles.form__group}>
+					<label htmlFor="email">Email</label>
+					<input name="email" type="text" />
+				</div>
+				<div className={styles.form__group}>
+					<label htmlFor="password">Mot de passe</label>
+					<input name="password" type="text" />
+				</div>
+				<button disabled={loading} type="submit">
+					Se connecter
+				</button>
+			</form>
+		</section>
+	);
+}
 
-    return (
-      <section onSubmit={handleSubmit}>
-          <form action="">
-            <label htmlFor="email">
-                Email
-              <input name="email" type="email" />  
-            </label>
-            <label htmlFor="password">
-                Mot de passe
-              <input name="password" type="password" />  
-            </label>
-        </form>
-      </section>
-    )
-  }
-  
-  export default Login
+export default Login;

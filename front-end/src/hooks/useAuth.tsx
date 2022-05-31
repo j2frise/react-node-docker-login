@@ -8,14 +8,14 @@ import {
 } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { User } from "src/models/user.type";
-import * as sessionsService from "src/services/auth.service";
+import * as authServices from "src/services/auth.service";
 
 interface AuthContextType {
 	user?: User;
 	loading: boolean;
 	error?: any;
-	login: (params: sessionsService.LoginType) => void;
-	signup: (params: sessionsService.SignUpType) => void;
+	login: (params: authServices.LoginType) => void;
+	signup: (params: authServices.SignUpType) => void;
 	logout: () => void;
 }
 
@@ -50,7 +50,8 @@ export function AuthProvider({
 	// Finally, just signal the component that the initial load
 	// is over.
 	useEffect(() => {
-		sessionsService
+        if(!user) {
+            authServices
 			.getCurrentUser()
 			.then((response) => {
 				if ("error" in response) {
@@ -61,6 +62,8 @@ export function AuthProvider({
 			})
 			.catch((_error) => {})
 			.finally(() => setLoadingInitial(false));
+        }
+		
 	}, []);
 
 	// Flags the component loading state and posts the login
@@ -71,10 +74,10 @@ export function AuthProvider({
 	//
 	// Finally, just signal the component that loading the
 	// loading state is over.
-	function login(params: sessionsService.LoginType) {
+	function login(params: authServices.LoginType) {
 		setLoading(true);
 
-		sessionsService
+		authServices
 			.login(params)
 			.then((response) => {
 				if ("error" in response) {
@@ -84,7 +87,7 @@ export function AuthProvider({
 				localStorage.setItem("token", response.token);
 			})
 			.then((_) => {
-				sessionsService.getCurrentUser().then((response) => {
+				authServices.getCurrentUser().then((response) => {
 					if ("error" in response) {
 						setError(response.error);
 						return;
@@ -97,8 +100,8 @@ export function AuthProvider({
 			.finally(() => setLoading(false));
 	}
 
-	function signup(params: sessionsService.SignUpType) {
-		sessionsService.signup(params).then((response) => {
+	function signup(params: authServices.SignUpType) {
+		authServices.signup(params).then((response) => {
 			if ("error" in response) {
 				setError(response.error);
 				return;

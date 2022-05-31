@@ -23,7 +23,7 @@ export async function login(params: LoginType): Promise<Token | ErrorResponse> {
 }
 
 export async function signup(params: SignUpType) {
-    const response: Token | ErrorResponse = await requestAxios("POST", "/auth/signup", params );
+    const response: Token | ErrorResponse = await requestAxios("POST", "/auth/register", params );
     return response;
 }
 

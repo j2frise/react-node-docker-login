@@ -5,7 +5,7 @@ export type ErrorResponse = {
 }
 
 export async function requestAxios(method: string, uri: string, data = null) {
-    const server = 'http://localhost:6868/api';
+    const server = 'http://localhost:8000/api';
     const token = localStorage.getItem('token') ?? null;
   
     try {
