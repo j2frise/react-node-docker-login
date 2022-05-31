@@ -1,6 +1,21 @@
+import useAuth from "src/hooks/useAuth";
+
 function Login() {
+
+    const { login, loading } = useAuth();
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const data = new FormData(e.currentTarget);
+
+        login({
+            email: data.get('email'),
+            password: data.get('password'),
+        });
+    }
+
     return (
-      <section>
+      <section onSubmit={handleSubmit}>
           <form action="">
             <label htmlFor="email">
                 Email

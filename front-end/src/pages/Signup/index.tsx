@@ -18,7 +18,7 @@ function Signup() {
 
     return (
         <section>
-            <form onSubmit={(e) => handleSubmit(e)}>
+            <form onSubmit={handleSubmit}>
                 <label htmlFor="lastname">
                     Nom
                 <input name="lastname" type="text" />  
