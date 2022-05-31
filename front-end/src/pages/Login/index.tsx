@@ -1,6 +1,17 @@
 function Login() {
     return (
-      <div>Login</div>
+      <section>
+          <form action="">
+            <label htmlFor="email">
+                Email
+              <input name="email" type="email" />  
+            </label>
+            <label htmlFor="password">
+                Mot de passe
+              <input name="password" type="password" />  
+            </label>
+        </form>
+      </section>
     )
   }
   
