@@ -1,0 +1,61 @@
+version: "3.8"
+
+services:
+  db:
+    env_file: ./.env
+    image: mysql:8
+    ports:
+      - $MYSQLDB_DOCKER_PORT:$MYSQLDB_DOCKER_PORT
+    restart: always
+    volumes:
+      - ./database:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQlDB_ROOT_PASSWORD
+      MYSQL_DATABASE: $MYSQLDB_DATABASE
+    networks:
+      - backend
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8008:80
+    environment:
+      - PMA_ARBITRARY=1
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      - db
+
+  api:
+    depends_on:
+      - db
+    build: ./back-end
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - $BACKEND_LOCAL_PORT:$BACKEND_DOCKER_PORT
+    volumes:
+      - ./back-end:/usr/src/back-end
+      - /usr/src/back-end/node_modules
+    networks:
+      - backend
+      - frontend
+
+  react:
+    depends_on:
+      - api
+    env_file: ./.env
+    build:
+      context: ./front-end
+      args:
+        - BASE_URL=$CLIENT_BACKEND_BASE_URL
+    ports:
+      - $FRONTEND_LOCAL_PORT:$FRONTEND_DOCKER_PORT
+    networks:
+      - frontend
+
+networks:
+  backend:
+  frontend:
