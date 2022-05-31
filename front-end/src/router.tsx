@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react';
 import { Navigate, Route } from 'react-router-dom';
 import { PartialRouteObject, RouteProps } from 'react-router';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import useAuth from './hooks/useAuth';
 
 const Loader = (Component) => (props) =>
   (
@@ -10,12 +11,12 @@ const Loader = (Component) => (props) =>
     </Suspense>
   );
 
-// const ProtectedRoute = (props: RouteProps) => {
-//   const { user } = useAuth();
+const ProtectedRoute = (props: RouteProps) => {
+  const { user } = useAuth();
 
-//   if (!user) return <Navigate to="/login" />;
-//   return <Route {...props} />;
-// };
+  if (!user) return <Navigate to="/login" />;
+  return <Route {...props} />;
+};
 
 const BaseLayout = Loader(lazy(() => import('src/layouts/BaseLayout')));
 const Home = Loader(lazy(() => import ('src/pages/Home')));
@@ -35,23 +36,16 @@ const routes: PartialRouteObject[] = [
             path: '/signup',
             element: <Signup />
         },
+        
         {
-            path: '/',
-            element: <Home />
+          element: <ProtectedRoute/>,
+          children: [
+            {
+                path: '/',
+                element: <Home />
+            },
+          ]
         },
-        // {
-        //   element: <ProtectedRoute/>,
-        //   children: [
-        //     {
-        //       path: '/',
-        //       element: <Navigate to="/dashboards" replace />
-        //     },
-        //     {
-        //       path: 'profile',
-        //       element: <SidebarLayout />,
-        //     }
-        //   ]
-        // },
         
       ]
     }

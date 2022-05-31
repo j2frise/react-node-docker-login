@@ -14,6 +14,7 @@ export type SignUpType = {
     firstname: FormDataEntryValue,
     lastname: FormDataEntryValue,
     email: FormDataEntryValue,
+    password: FormDataEntryValue;
 }
 
 export async function login(params: LoginType): Promise<Token | ErrorResponse> {

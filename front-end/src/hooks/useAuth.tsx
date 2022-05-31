@@ -15,6 +15,7 @@ import {
     loading: boolean;
     error?: any;
     login: (params: sessionsService.LoginType) => void;
+    signup: (params: sessionsService.SignUpType) => void;
     logout: () => void;
   }
   
@@ -52,7 +53,7 @@ import {
       sessionsService
         .getCurrentUser()
         .then((response) => {
-          if("error" in response) {
+          if('error' in response) {
             setError(response.error);
             return;
           } 
@@ -97,6 +98,19 @@ import {
         .catch((error) => setError(error))
         .finally(() => setLoading(false));
     }
+  
+    function signup(params: sessionsService.SignUpType) {
+      sessionsService.signup(params)
+      .then(response => {
+        if ('error' in response) {
+          setError(response.error);
+          return;
+        }
+        navigate('/login');
+      })
+    }
+  
+  
     // Call the logout endpoint and then remove the user
     // from the state.
     function logout() {
@@ -118,6 +132,7 @@ import {
         loading,
         error,
         login,
+        signup,
         logout
       }),
       [user, loading, error]
@@ -137,4 +152,3 @@ import {
   export default function useAuth() {
     return useContext(AuthContext);
   }
-  
